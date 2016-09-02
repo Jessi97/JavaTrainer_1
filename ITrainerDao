@@ -5,17 +5,17 @@ public interface ITrainerDao {
 	
 	public ITrainer createTrainer();
 	
-	public ITrainer delete(ITrainer itrainer);
+	public ITrainer delete(ITrainer iTrainer);
 	
 	public ITrainer selectFirst();
 	
 	public ITrainer selectLast();
 	
-	public ITrainer selectNext(ITrainer itrainer);
+	public ITrainer selectNext(ITrainer iTrainer);
 	
-	public ITrainer selectPrevious(ITrainer itrainer);
+	public ITrainer selectPrevious(ITrainer iTrainer);
 	
-	public ITrainer save (ITrainer itrainer);
+	public ITrainer save (ITrainer iTrainer);
 	
 	public List<ITrainer> selectTrainer();
 	
