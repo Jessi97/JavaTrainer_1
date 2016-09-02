@@ -1,0 +1,24 @@
+import java.util.List;
+
+
+public interface ITrainerDao {
+	
+	public ITrainer createTrainer();
+	
+	public ITrainer delete(ITrainer itrainer);
+	
+	public ITrainer selectFirst();
+	
+	public ITrainer selectLast();
+	
+	public ITrainer selectNext(ITrainer itrainer);
+	
+	public ITrainer selectPrevious(ITrainer itrainer);
+	
+	public ITrainer save (ITrainer itrainer);
+	
+	public List<ITrainer> selectTrainer();
+	
+	public ITrainer selectTrainerById(int id);
+
+}
