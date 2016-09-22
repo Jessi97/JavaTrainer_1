@@ -1,0 +1,29 @@
+package dataLayer;
+
+import dataLayer.dataAccessObjects.DataLayerXml;
+
+/**
+ * Created by Marvin on 9/22/2016.
+ */
+public class DataLayerManager
+{
+    private static DataLayerManager instance = new DataLayerManager();
+
+    private IDataLayer iDataLayer;
+
+    public static DataLayerManager getInstance()
+    {
+        return instance;
+    }
+
+    private DataLayerManager()
+    {
+        iDataLayer = new DataLayerXml();
+        //iDataLayer = new DataLayerSqllite();
+    }
+
+    public IDataLayer getIDataLayer()
+    {
+        return this.iDataLayer;
+    }
+}
