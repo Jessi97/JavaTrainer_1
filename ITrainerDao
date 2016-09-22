@@ -1,24 +1,25 @@
 import java.util.List;
 
+/**
+ * Created by Marvin on 9/2/2016.
+ */
+public interface ITrainerDao
+{
+    public ITrainer createTrainer();
 
-public interface ITrainerDao {
-	
-	public ITrainer createTrainer();
-	
-	public ITrainer delete(ITrainer iTrainer);
-	
-	public ITrainer selectFirst();
-	
-	public ITrainer selectLast();
-	
-	public ITrainer selectNext(ITrainer iTrainer);
-	
-	public ITrainer selectPrevious(ITrainer iTrainer);
-	
-	public ITrainer save (ITrainer iTrainer);
-	
-	public List<ITrainer> selectTrainer();
-	
-	public ITrainer selectTrainerById(int id);
+    public void delete(ITrainer iTrainer);
 
+    public ITrainer selectFirst();
+
+    public ITrainer selectLast();
+
+    public ITrainer selectNext(ITrainer iTrainer);
+
+    public ITrainer selectPrevious(ITrainer iTrainer);
+
+    public void save (ITrainer iTrainer);
+
+    public List<ITrainer> selectTrainer();
+
+    public ITrainer selectTrainerById(int id);
 }
