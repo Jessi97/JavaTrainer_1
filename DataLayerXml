@@ -1,0 +1,21 @@
+package dataLayer.dataAccessObjects;
+
+import dataLayer.IDataLayer;
+
+/**
+ * Created by Marvin on 9/22/2016.
+ */
+public class DataLayerXml implements IDataLayer
+{
+    private TrainerDaoXml trainerDaoXml;
+
+    public DataLayerXml()
+    {
+        this.trainerDaoXml = new TrainerDaoXml();
+    }
+    @Override
+    public ITrainerDao getTrainerDao()
+    {
+        return this.trainerDaoXml;
+    }
+}
