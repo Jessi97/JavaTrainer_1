@@ -8,6 +8,15 @@ public class Trainer implements ITrainer {
 	private int alter; 
 	private int erfahrung;
 
+        public Trainer(int id, String nname, String vname, int alter, int erfahrung)
+        {
+           this.id = id;
+           this.nname = nname;
+           this.vname = vname;
+           this.alter = alter;
+           this.erfahrung = erfahrung;
+        }
+
 	public int getId(){
 		return id;
 	}
