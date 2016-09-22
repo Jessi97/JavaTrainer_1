@@ -145,7 +145,7 @@ public class TrainerDaoXml implements ITrainerDao
     {
         return new Trainer(this.getNextId(), "", "", 0, 0);
     }
-    
+
     private int getNextId()
     {
         int nextId = 0;
@@ -153,9 +153,9 @@ public class TrainerDaoXml implements ITrainerDao
         for(ITrainer trainer : this.trainers)
             if(trainer.getId() > nextId)
                 nextId = trainer.getId();
-        
+
         nextId++;
-        
+
         return nextId;
     }
 
@@ -174,14 +174,14 @@ public class TrainerDaoXml implements ITrainerDao
     @Override
     public ITrainer selectFirst()
     {
-        int lowestId = 999;
+        int first = 999;
 
         for(ITrainer trainer : this.trainers)
-            if(trainer.getId() < lowestId)
-                lowestId = trainer.getId();
+            if(trainer.getId() < first)
+                first = trainer.getId();
 
         for(ITrainer trainer : this.trainers)
-            if(trainer.getId() == lowestId)
+            if(trainer.getId() == first)
                 return trainer;
 
         return null;
@@ -190,14 +190,14 @@ public class TrainerDaoXml implements ITrainerDao
     @Override
     public ITrainer selectLast()
     {
-        int nextId = 0;
+        int last = 0;
 
         for(ITrainer trainer : this.trainers)
-            if(trainer.getId() > nextId)
-                nextId = trainer.getId();
+            if(trainer.getId() > last)
+                last = trainer.getId();
 
         for(ITrainer trainer : this.trainers)
-            if(trainer.getId() == nextId)
+            if(trainer.getId() == last)
                 return trainer;
 
         return null;
