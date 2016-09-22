@@ -1,20 +1,42 @@
 package JavaTrainer;
 
-import java.sql.Date;
-
-public class Trainer {
+public class Trainer implements ITrainer {
 	
 	private int id; 
 	private String nname; 
-	private String vname; 
-	private Date geburtstag; 
+	private String vname;  
 	private int alter; 
 	private int erfahrung;
-	
+
+	public int getId(){
+		return id;
+	}
 	public void setID(int id){
 		this.id = id; 
 	}
+	public String getNName(){
+		return nname;
+	}
+	public void setNName(String nname){
+		this.nname = nname; 
+	}
 	
-
-	
+	public String getVName(){
+		return vname;
+	}
+	public void setVName(String vname){
+		this.vname = vname; 
+	}
+	public int getAlter(){
+		return alter;
+	}
+	public void setAlter(int alter){
+		this.alter = alter; 
+	}
+	public int getErfahrung(){
+		return erfahrung;
+	}
+	public void setErfahrung(int erfahrung){
+		this.erfahrung = erfahrung; 
+	}
 }
