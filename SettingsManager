@@ -1,0 +1,28 @@
+package schule;
+
+public class SettingsManager {
+
+	PersistenceSettings persistenceSettings;
+	private static SettingsManager instance = null;
+
+	public SettingsManager() {
+	}
+
+	public static SettingsManager getInstance() {
+		if (instance == null) {
+			instance = new SettingsManager();
+		}
+		return instance;
+	}
+
+	public PersistenceSettings getPersistenceSettings() {
+
+		return persistenceSettings;
+
+	}
+	
+	private void readPersistenceSettings() {
+		
+	}
+
+}
