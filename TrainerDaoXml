@@ -73,7 +73,8 @@ public class TrainerDaoXml implements ITrainerDao
                     nName = eElement.getElementsByTagName("Nachname").item(0).getTextContent();
                     alter = Integer.parseInt(eElement.getElementsByTagName("Alter").item(0).getTextContent());
                     erfahrung = Integer.parseInt(eElement.getElementsByTagName("Erfahrung").item(0).getTextContent());
-                    System.out.println(id + " " + vName + " " + nName + " " + alter + " " + erfahrung);
+
+//                    System.out.println(id + " " + vName + " " + nName + " " + alter + " " + erfahrung);
 
                     this.trainers.add(new Trainer(id, vName, nName, alter, erfahrung));
                 }
