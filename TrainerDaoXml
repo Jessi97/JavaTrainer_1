@@ -1,0 +1,255 @@
+package dataLayer.dataAccessObjects;
+
+import java.io.File;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import dataLayer.businessObjects.ITrainer;
+import dataLayer.businessObjects.Trainer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * Created by Marvin on 9/22/2016.
+ */
+public class TrainerDaoXml implements ITrainerDao
+{
+    private ArrayList<ITrainer> trainers;
+
+    private final static String path = "C:\\Users\\Marvin\\java\\trainer.xml";
+
+
+    public TrainerDaoXml()
+    {
+        this.readXml();
+    }
+
+    public void readXml()
+    {
+        this.trainers = new ArrayList<>();
+
+        try {
+
+            // Parameter
+            String vName, nName;
+            int alter, erfahrung, id;
+
+            File fXmlFile = new File(this.path);
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+
+            doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getElementsByTagName("Trainer");
+
+            for (int i = 0; i < nList.getLength(); i++)
+            {
+
+                Node nNode = nList.item(i);
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element eElement = (Element) nNode;
+
+                    id = Integer.parseInt(eElement.getAttribute("id"));
+                    vName = eElement.getElementsByTagName("Vorname").item(0).getTextContent();
+                    nName = eElement.getElementsByTagName("Nachname").item(0).getTextContent();
+                    alter = Integer.parseInt(eElement.getElementsByTagName("Alter").item(0).getTextContent());
+                    erfahrung = Integer.parseInt(eElement.getElementsByTagName("Erfahrung").item(0).getTextContent());
+                    System.out.println(id + " " + vName + " " + nName + " " + alter + " " + erfahrung);
+
+                    this.trainers.add(new Trainer(id, vName, nName, alter, erfahrung));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveXml(ArrayList<ITrainer> trainers)
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder icBuilder;
+
+        try
+        {
+            icBuilder = factory.newDocumentBuilder();
+            Document doc = icBuilder.newDocument();
+            Element mainRootElement = doc.createElementNS("", "Trainers");
+            doc.appendChild(mainRootElement);
+
+            // append child elements to root element
+            for(ITrainer trainer : trainers)
+            {
+                String vName = trainer.getVName(),
+                       nName = trainer.getNName();
+                int alter = trainer.getAlter(),
+                    erfahrung = trainer.getErfahrung(),
+                    id = trainer.getId();
+
+                mainRootElement.appendChild(appendTrainer(doc, vName, nName, alter, erfahrung, id));
+            }
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+
+            /*StreamResult console = new StreamResult(System.out);  // Write XML to Console
+            transformer.transform(source, console);*/
+
+            StreamResult file = new StreamResult(new File(this.path));
+            transformer.transform(source, file);
+        }
+        catch(ParserConfigurationException | TransformerException e){e.printStackTrace();}
+    }
+
+    private Node appendTrainer(Document doc, String vName, String nName, int alter, int erfahrung, int id)
+    {
+        Element trainer = doc.createElement("Trainer");
+        trainer.setAttribute("id", id + "");
+        trainer.appendChild(appendElements(doc, trainer, "Vorname", vName));
+        trainer.appendChild(appendElements(doc, trainer, "Nachname", nName));
+        trainer.appendChild(appendElements(doc, trainer, "Alter", alter + ""));
+        trainer.appendChild(appendElements(doc, trainer, "Erfahrung", erfahrung + ""));
+
+        return trainer;
+    }
+
+    private Node appendElements(Document doc, Element element, String name, String value)
+    {
+        Element node = doc.createElement(name);
+        node.appendChild(doc.createTextNode(value));
+        return node;
+    }
+
+    @Override
+    public ITrainer createTrainer()
+    {
+        //Trainer newTrainer = new Trainer(0, vName, nName, alter, erfahrung);
+        return null;
+    }
+
+    @Override
+    public void delete(ITrainer iTrainer)
+    {
+        ArrayList<ITrainer> newList = new ArrayList<>();
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() != iTrainer.getId())
+                newList.add(trainer);
+
+        this.trainers = newList;
+    }
+
+    @Override
+    public ITrainer selectFirst()
+    {
+        int lowestId = 999;
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() < lowestId)
+                lowestId = trainer.getId();
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() == lowestId)
+                return trainer;
+
+        return null;
+    }
+
+    @Override
+    public ITrainer selectLast()
+    {
+        int highestId = 0;
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() > highestId)
+                highestId = trainer.getId();
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() == highestId)
+                return trainer;
+
+        return null;
+    }
+
+    @Override
+    public ITrainer selectNext(ITrainer iTrainer)
+    {
+        int currentId = iTrainer.getId();
+        int nextId = 0;
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() > currentId)
+            {
+                if(nextId == 0)
+                    nextId = trainer.getId();
+                else if(trainer.getId() < nextId)
+                    nextId = trainer.getId();
+            }
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() == nextId)
+                return trainer;
+
+        return null;
+    }
+
+    @Override
+    public ITrainer selectPrevious(ITrainer iTrainer)
+    {
+        int currentId = iTrainer.getId();
+        int prevId = 0;
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() < currentId)
+            {
+                if(prevId == 0)
+                    prevId = trainer.getId();
+                else if(trainer.getId() > prevId)
+                    prevId = trainer.getId();
+            }
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() == prevId)
+                return trainer;
+
+        return null;
+    }
+
+    @Override
+    public void save(ITrainer iTrainer)
+    {
+        this.trainers.add(iTrainer);
+        this.saveXml(this.trainers);
+    }
+
+    @Override
+    public List<ITrainer> selectTrainer()
+    {
+        return this.trainers;
+    }
+
+    @Override
+    public ITrainer selectTrainerById(int id)
+    {
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() == id)
+                return trainer;
+
+        return null;
+    }
+}
