@@ -2,16 +2,18 @@ package JavaTrainer;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import JavaTrainer.NoNextTrainer.NoNextTrainerFound;
 
 public class JFrame_JavaTrainer extends JFrame {
 
@@ -21,8 +23,9 @@ public class JFrame_JavaTrainer extends JFrame {
 	private JTextField textField_VName;
 	private JTextField textField_Alter;
 	private JTextField textField_Erfahrung;
-	private JTextField textField_Geburtsdatum;
 	private int ID;
+	private Trainer trainer;
+	private ITrainerDao trainerdao;
 
 	/**
 	 * Launch the application.
@@ -64,7 +67,11 @@ public class JFrame_JavaTrainer extends JFrame {
 		JButton button_Suchen = new JButton("Suchen");
 		button_Suchen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonSuchenActionPerformed(e);
+				try {
+					buttonSuchenActionPerformed(e);
+				} catch (NoTrainerFoundException e1) {
+						e1.printStackTrace();
+				}
 			}
 		});
 		button_Suchen.setBounds(288, 12, 110, 25);
@@ -82,7 +89,7 @@ public class JFrame_JavaTrainer extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Alter:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblNewLabel.setBounds(257, 110, 56, 16);
+		lblNewLabel.setBounds(12, 110, 56, 16);
 		panel.add(lblNewLabel);
 		
 		JLabel lblVorname = new JLabel("Vorname:");
@@ -96,8 +103,7 @@ public class JFrame_JavaTrainer extends JFrame {
 		textField_VName.setColumns(10);
 		
 		textField_Alter = new JTextField();
-		textField_Alter.setEditable(false);
-		textField_Alter.setBounds(301, 108, 97, 22);
+		textField_Alter.setBounds(129, 108, 269, 22);
 		panel.add(textField_Alter);
 		textField_Alter.setColumns(10);
 		
@@ -114,7 +120,11 @@ public class JFrame_JavaTrainer extends JFrame {
 		JButton button_First = new JButton("<<");
 		button_First.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonFirstActionPerformed(e);
+				try {
+					buttonFirstActionPerformed(e);
+				} catch (NoTrainerFoundException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		button_First.setBounds(12, 219, 65, 25);
@@ -123,7 +133,11 @@ public class JFrame_JavaTrainer extends JFrame {
 		JButton button_Last = new JButton(">>");
 		button_Last.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonLastActionPerformed(e);
+				try {
+					buttonLastActionPerformed(e);
+				} catch (NoTrainerFoundException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		button_Last.setBounds(333, 219, 65, 25);
@@ -132,7 +146,11 @@ public class JFrame_JavaTrainer extends JFrame {
 		JButton button_Next = new JButton("<");
 		button_Next.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonPreviousActionPerformed(e);
+				try {
+					buttonPreviousActionPerformed(e);
+				} catch (NoPreviousTrainerFound e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		button_Next.setBounds(89, 219, 65, 25);
@@ -141,7 +159,11 @@ public class JFrame_JavaTrainer extends JFrame {
 		JButton button_Previous = new JButton(">");
 		button_Previous.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonNextActionPerformed(e);
+				try {
+					buttonNextActionPerformed(e);
+				} catch (NoNextTrainerFound e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		button_Previous.setBounds(256, 219, 65, 25);
@@ -178,107 +200,72 @@ public class JFrame_JavaTrainer extends JFrame {
 		JButton btnSpeichern = new JButton("Speichern");
 		btnSpeichern.setBounds(204, 191, 97, 25);
 		panel.add(btnSpeichern);
-		
-		JLabel lblGeburtsdatum = new JLabel("Geburtsdatum:");
-		lblGeburtsdatum.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblGeburtsdatum.setBounds(12, 111, 114, 16);
-		panel.add(lblGeburtsdatum);
-		
-		textField_Geburtsdatum = new JTextField();
-		textField_Geburtsdatum.setBounds(129, 108, 116, 22);
-		panel.add(textField_Geburtsdatum);
-		textField_Geburtsdatum.setColumns(10);
 }
 
 		protected void buttonNeuActionPerformed(ActionEvent arg0) {
 			textField_ID.setText(null);
 			textField_NName.setText(null);
 			textField_VName.setText(null);
-			textField_Geburtsdatum.setText(null);
+			textField_Alter.setText(null);
 			textField_Alter.setText(null);
 			textField_Erfahrung.setText(null);
 }
 		protected void buttonAendernActionPerformed(ActionEvent e){
-			Trainer.setNName(textField_NName.getText());
-			Trainer.setVName(textField_VName.getText());
-			Trainer.setGeburtsdatum(textField_Geburtsdatum.getText());
-			Trainer.setErfahrung(textField_Erfahrung.getText());
-			ITrainerDAO.update();
-}	
+			trainer.setNName(textField_NName.getText());
+			trainer.setVName(textField_VName.getText());
+			if(NumericHelper.isNumeric(textField_Alter.getText())){
+				trainer.setAlter(Integer.parseInt(textField_Alter.getText()));				
+			}
+			
+			if(NumericHelper.isNumeric(textField_Erfahrung.getText())){
+				trainer.setErfahrung(Integer.parseInt(textField_Erfahrung.getText()));				
+			}
+			trainerdao.update();
+}			
+			
 		protected void buttonBeendenActionPerformed(ActionEvent e) {
 			System.exit(0);
   }
-		protected void buttonFirstActionPerformed(ActionEvent e){
-			try{
-				Trainer = ITrainerDAO.first();
-			}
-			catch (NoTrainerFound e) {
-					
-			}
-			textField_ID.setText(Integer.toString(Trainer.getTrainerID()));
-			textField_NName.setText(Trainer.getNName());
-			textField_VName.setText(Trainer.getVName());
-			textField_Geburtsdatum.setText(Trainer.getGeburtsdatum());
-			textField_Erfahrung.setText(Trainer.getErfahrung());
+		protected void buttonFirstActionPerformed(ActionEvent e) throws NoTrainerFoundException{
+			trainer = (Trainer) trainerdao.selectFirst();
+			textField_ID.setText(Integer.toString(trainer.getId()));
+			textField_NName.setText(trainer.getNName());
+			textField_VName.setText(trainer.getVName());
+			textField_Alter.setText(Integer.toString(trainer.getAlter()));
+			textField_Erfahrung.setText(Integer.toString(trainer.getErfahrung()));
   }
-		protected void buttonPreviousActionPerformed(ActionEvent e){
-			try{
-				Trainer = ITrainerDAO.previous(Trainer);
-			}
-			catch(NoPerviousTrainerFound e){
-				JOptionPane.showMessageDialog(this, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
-			}
-			textField_ID.setText(Integer.toString(Trainer.getTrainerID()));
-			textField_NName.setText(Trainer.getNName());
-			textField_VName.setText(Trainer.getVName());
-			textField_Geburtsdatum.setText(Integer.toString(Trainer.getGeburtsdatum()));
-			textField_Erfahrung.setText(Trainer.getErfahrung());
+		protected void buttonPreviousActionPerformed(ActionEvent e) throws NoPreviousTrainerFound{
+			trainer = (Trainer) trainerdao.selectPrevious(trainer);
+			textField_ID.setText(Integer.toString(trainer.getId()));
+			textField_NName.setText(trainer.getNName());
+			textField_VName.setText(trainer.getVName());
+			textField_Alter.setText(Integer.toString(trainer.getAlter()));
+			textField_Erfahrung.setText(Integer.toString(trainer.getErfahrung()));
   }
-		protected void buttonNextActionPerformed(ActionEvent e){
-			try{
-				Trainer = ITrainerDAO.next(Trainer);
-			}
-			catch(NoNextTrainerFound e){
-				JOptionPane.showMessageDialog(this, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
-			}
-			textField_ID.setText(Integer.toString(Trainer.getTrainerID()));
-			textField_NName.setText(Trainer.getNName());
-			textField_VName.setText(Trainer.getVName());
-			textField_Geburtsdatum.setText(Integer.toString(Trainer.getGeburtsdatum()));
-			textField_Erfahrung.setText(Trainer.getErfahrung());
+		protected void buttonNextActionPerformed(ActionEvent e) throws NoNextTrainerFound{
+			trainer = (Trainer) trainerdao.selectNext(trainer);
+			textField_ID.setText(Integer.toString(trainer.getId()));
+			textField_NName.setText(trainer.getNName());
+			textField_VName.setText(trainer.getVName());
+			textField_Alter.setText(Integer.toString(trainer.getAlter()));
+			textField_Erfahrung.setText(Integer.toString(trainer.getErfahrung()));
   }
-		protected void buttonLastActionPerformed(ActionEvent e){
-			try{
-				Trainer = ITrainerDAO.last();
-			}catch (NoTrainerFound e) {
-				JOptionPane.showMessageDialog(this, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
-  }
-			textField_ID.setText(Integer.toString(Trainer.getTrainerID()));
-			textField_NName.setText(Trainer.getNName());
-			textField_VName.setText(Trainer.getVName());
-			textField_Geburtsdatum.setText(Integer.toString(Trainer.getGeburtsdatum()));
-			textField_Erfahrung.setText(Trainer.getErfahrung());
+		protected void buttonLastActionPerformed(ActionEvent e) throws NoTrainerFoundException{
+			trainer = (Trainer) trainerdao.selectLast();
+			textField_ID.setText(Integer.toString(trainer.getId()));
+			textField_NName.setText(trainer.getNName());
+			textField_VName.setText(trainer.getVName());
+			textField_Alter.setText(Integer.toString(trainer.getAlter()));
+			textField_Erfahrung.setText(Integer.toString(trainer.getErfahrung()));
 		}
 		
-		protected void buttonSuchenActionPerformed(ActionEvent e){
-			try {
-				ID = Integer.parseInt(textField_ID.getText());
-				try{		
-					Trainer = ITrainerDAO.select(ID);
-				}
-				catch (NoTrainerFound e) {
-					JOptionPane.showMessageDialog(this, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
-				}
-				textField_ID.setText(Integer.toString(Trainer.getTrainerID()));
-				textField_NName.setText(Trainer.getNName());
-				textField_VName.setText(Trainer.getVName());
-				textField_Geburtsdatum.setText(Integer.toString(Trainer.getGeburtsdatum()));
-				textField_Erfahrung.setText(Trainer.getErfahrung());
-		
-			} catch (NumberFormatException e1) {
-				JOptionPane.showMessageDialog(this, "Bitte geben Sie die entsprechende Trainer ID ein.", this.getTitle(), JOptionPane.ERROR_MESSAGE);	
-			}
-			
-
-		}
+		protected void buttonSuchenActionPerformed(ActionEvent e) throws NoTrainerFoundException{
+			ID = Integer.parseInt(textField_ID.getText());
+			trainer = (Trainer) trainerdao.selectTrainerById(ID);
+			textField_ID.setText(Integer.toString(trainer.getId()));
+			textField_NName.setText(trainer.getNName());
+			textField_VName.setText(trainer.getVName());
+			textField_Alter.setText(Integer.toString(trainer.getAlter()));
+			textField_Erfahrung.setText(Integer.toString(trainer.getErfahrung()));
+	}
 }
