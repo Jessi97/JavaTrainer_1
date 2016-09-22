@@ -26,11 +26,16 @@ public class TrainerDaoXml implements ITrainerDao
 {
     private ArrayList<ITrainer> trainers;
 
-    private final static String path = "C:\\Users\\Marvin\\java\\trainer.xml";
+    private String path;
 
 
     public TrainerDaoXml()
     {
+        this.path = "C:\\Users\\"+ System.getenv().get("USERNAME") + "\\java\\trainer.xml";
+        File fPath = new File(this.path);
+
+        if(!fPath.exists()) fPath.mkdirs();
+
         this.readXml();
     }
 
@@ -138,8 +143,20 @@ public class TrainerDaoXml implements ITrainerDao
     @Override
     public ITrainer createTrainer()
     {
-        //Trainer newTrainer = new Trainer(0, vName, nName, alter, erfahrung);
-        return null;
+        return new Trainer(this.getNextId(), "", "", 0, 0);
+    }
+    
+    private int getNextId()
+    {
+        int nextId = 0;
+
+        for(ITrainer trainer : this.trainers)
+            if(trainer.getId() > nextId)
+                nextId = trainer.getId();
+        
+        nextId++;
+        
+        return nextId;
     }
 
     @Override
@@ -173,14 +190,14 @@ public class TrainerDaoXml implements ITrainerDao
     @Override
     public ITrainer selectLast()
     {
-        int highestId = 0;
+        int nextId = 0;
 
         for(ITrainer trainer : this.trainers)
-            if(trainer.getId() > highestId)
-                highestId = trainer.getId();
+            if(trainer.getId() > nextId)
+                nextId = trainer.getId();
 
         for(ITrainer trainer : this.trainers)
-            if(trainer.getId() == highestId)
+            if(trainer.getId() == nextId)
                 return trainer;
 
         return null;
@@ -235,6 +252,7 @@ public class TrainerDaoXml implements ITrainerDao
     {
         this.trainers.add(iTrainer);
         this.saveXml(this.trainers);
+        this.readXml();
     }
 
     @Override
