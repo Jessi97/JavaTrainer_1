@@ -1,3 +1,43 @@
+/*
+public void saveXml(ITrainer newTrainer)
+    {
+        this.trainers.add(newTrainer);
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder icBuilder;
+
+        try
+        {
+            icBuilder = factory.newDocumentBuilder();
+            Document doc = icBuilder.newDocument();
+            Element mainRootElement = doc.createElementNS("", "Trainers");
+            doc.appendChild(mainRootElement);
+
+            // append child elements to root element
+            for(ITrainer trainer : trainers)
+            {
+                String vName = trainer.getVName(),
+                       nName = trainer.getNName();
+                int alter = trainer.getAlter(),
+                    erfahrung = trainer.getErfahrung(),
+                    id = trainer.getId();
+
+                mainRootElement.appendChild(appendTrainer(doc, vName, nName, alter, erfahrung, id));
+            }
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+
+            /*StreamResult console = new StreamResult(System.out);  // Write XML to Console
+            transformer.transform(source, console);*/
+
+            StreamResult file = new StreamResult(new File(this.path));
+            transformer.transform(source, file);
+        }
+        catch(ParserConfigurationException | TransformerException e){e.printStackTrace();}
+    }
+*/
 package dataLayer.dataAccessObjects;
 
 import java.io.File;
