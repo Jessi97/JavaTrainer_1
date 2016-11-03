@@ -1,42 +1,28 @@
 /*
 public void saveXml(ITrainer newTrainer)
     {
-        this.trainers.add(newTrainer);
+        if(newTrainer != null)
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder icBuilder;
+            this.trainers.add(newTrainer);
+........
 
-        try
-        {
-            icBuilder = factory.newDocumentBuilder();
-            Document doc = icBuilder.newDocument();
-            Element mainRootElement = doc.createElementNS("", "Trainers");
-            doc.appendChild(mainRootElement);
+@Override
+    public void delete(ITrainer iTrainer)
+    {
+        List<ITrainer> newList = new List<>();
 
-            // append child elements to root element
-            for(ITrainer trainer : trainers)
-            {
-                String vName = trainer.getVName(),
-                       nName = trainer.getNName();
-                int alter = trainer.getAlter(),
-                    erfahrung = trainer.getErfahrung(),
-                    id = trainer.getId();
+        for(ITrainer trainer : this.trainers)
 
-                mainRootElement.appendChild(appendTrainer(doc, vName, nName, alter, erfahrung, id));
-            }
+            if(trainer.getId() != iTrainer.getId())
 
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            DOMSource source = new DOMSource(doc);
+                newList.add(trainer);
 
-            /*StreamResult console = new StreamResult(System.out);  // Write XML to Console
-            transformer.transform(source, console);*/
+        this.trainers = newList;
 
-            StreamResult file = new StreamResult(new File(this.path));
-            transformer.transform(source, file);
-        }
-        catch(ParserConfigurationException | TransformerException e){e.printStackTrace();}
+        this.save(null);
     }
+
+
 */
 package dataLayer.dataAccessObjects;
 
